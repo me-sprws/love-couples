@@ -18,7 +18,7 @@ A realtime quiz platform for couples to have fun, learn about each other, and st
 
 ### Architecture
 
-![Architecture](assets\images\system-desing.png)
+![Architecture](./assets/images/system-desing.png)
 
 ### CouplesService API
 
@@ -140,6 +140,6 @@ Info: to end the couples, just update your couples status to "Separated".
 
 #### Architecture
 
-![DDD](C:\Users\ilyao\OneDrive\Desktop\Development\Backend\love-couples\assets\images\ddd-service-layer-dependencies.png)
+![DDD](./assets/images/ddd-service-layer-dependencies.png)
 
 **Source**: [Microsoft DDD-oriented microservice](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice).
