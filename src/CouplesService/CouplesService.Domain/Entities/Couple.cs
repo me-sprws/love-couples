@@ -3,10 +3,12 @@ using LoveCouples.Domain.Contracts;
 
 namespace CouplesService.Domain.Entities;
 
-public class Couples : Entity
+public sealed class Couple : Entity
 {
     public CouplesStatus Status { get; set; }
     public DateTimeOffset? SeparatedAt { get; set; }
     public DateTimeOffset TogetherSince { get; set; }
-    public ICollection<Membership> Members { get; set; } = new List<Membership>();
+    public Invitation? Invitation { get; set; }
+    public Guid? InvitationId { get; set; }
+    public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
 }

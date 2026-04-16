@@ -11,7 +11,7 @@ public sealed class ServiceDbContext : CoreDbContext
     }
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<Couples> Couples => Set<Couples>();
+    public DbSet<Couple> Couples => Set<Couple>();
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<Invitation> Invitations => Set<Invitation>();
 
