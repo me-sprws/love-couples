@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouplesService.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouplesService.WebAPI", "src\CouplesService\CouplesService.WebAPI\CouplesService.WebAPI.csproj", "{9438EED3-64FF-4A03-A8FA-08FEE130C1F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoveCouples.Domain", "src\LoveCouples.Domain\LoveCouples.Domain.csproj", "{52DC2BD8-3AB6-4331-8E7C-5554CB575F83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoveCouples.Infrastructure", "src\LoveCouples.Infrastructure\LoveCouples.Infrastructure.csproj", "{2D730F9A-C31A-49C9-ACB8-C538256638F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +36,14 @@ Global
 		{9438EED3-64FF-4A03-A8FA-08FEE130C1F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9438EED3-64FF-4A03-A8FA-08FEE130C1F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9438EED3-64FF-4A03-A8FA-08FEE130C1F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52DC2BD8-3AB6-4331-8E7C-5554CB575F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52DC2BD8-3AB6-4331-8E7C-5554CB575F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52DC2BD8-3AB6-4331-8E7C-5554CB575F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52DC2BD8-3AB6-4331-8E7C-5554CB575F83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D730F9A-C31A-49C9-ACB8-C538256638F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D730F9A-C31A-49C9-ACB8-C538256638F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D730F9A-C31A-49C9-ACB8-C538256638F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D730F9A-C31A-49C9-ACB8-C538256638F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{515085EF-8EAF-4475-BD83-D545FBB49703} = {63DB8224-1679-4ECA-84B3-4285E3035724}
