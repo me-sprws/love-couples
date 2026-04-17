@@ -1,6 +1,0 @@
-@CouplesService.WebAPI_HostAddress = http://localhost:5035
-
-GET {{CouplesService.WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
