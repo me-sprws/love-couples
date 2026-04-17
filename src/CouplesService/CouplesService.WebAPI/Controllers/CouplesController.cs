@@ -5,6 +5,7 @@ namespace CouplesService.WebAPI.Controllers;
 
 [Authorize]
 [ApiController]
+[Route("[controller]")]
 public sealed class CouplesController : ControllerBase
 {
     [HttpPost]

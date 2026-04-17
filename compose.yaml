@@ -1,0 +1,29 @@
+﻿services:
+  db:
+    image: postgres:16
+    container_name: couples-service-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: CouplesDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  couplesservice.webapi:
+    image: couplesservice.webapi
+    container_name: couples-service-api
+    build:
+      context: .
+      dockerfile: ./src/CouplesService/CouplesService.WebAPI/Dockerfile
+    environment:
+      ConnectionStrings__Database: "Host=db;Port=5432;Database=CouplesDb;Username=postgres;Password=mysecretpassword;"
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

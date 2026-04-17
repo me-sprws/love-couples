@@ -21,5 +21,11 @@ public sealed class CoupleConfiguration : IEntityTypeConfiguration<Couple>
             .WithOne(x => x.Couple)
             .HasForeignKey(x => x.CoupleId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(x => x.Invitation)
+            .WithOne(x => x.Couple)
+            .HasForeignKey<Invitation>(x => x.CoupleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
