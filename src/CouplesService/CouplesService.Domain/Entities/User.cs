@@ -8,4 +8,11 @@ public sealed class User : Entity
     public string? Country { get; set; }
     public DateTimeOffset BirthDate { get; set; }
     public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
+
+    public void UpdateInfo(string name, string? country, DateTimeOffset birthDate)
+    {
+        Name = name;
+        Country = country;
+        BirthDate = birthDate;
+    }
 }
