@@ -7,12 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\LoveCouples.Application\LoveCouples.Application.csproj" />
         <ProjectReference Include="..\CouplesService.Domain\CouplesService.Domain.csproj"/>
         <ProjectReference Include="..\CouplesService.Infrastructure\CouplesService.Infrastructure.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="MediatR" Version="14.1.0" />
     </ItemGroup>
 
 </Project>

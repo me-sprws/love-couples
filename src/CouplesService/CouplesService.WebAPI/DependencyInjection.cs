@@ -9,7 +9,7 @@ internal static class DependencyInjection
         
         services.AddAuthorization();
         services.AddAuthentication();
-
+        
         return services;
     }
 }

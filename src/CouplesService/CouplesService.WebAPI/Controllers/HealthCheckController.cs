@@ -7,8 +7,8 @@ namespace CouplesService.WebAPI.Controllers;
 public sealed class HealthCheckController : ControllerBase
 {
     [HttpGet]
-    public OkResult Check()
+    public OkObjectResult Check()
     {
-        return Ok();
+        return Ok("alive");
     }
 }

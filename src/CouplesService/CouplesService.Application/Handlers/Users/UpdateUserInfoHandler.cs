@@ -1,32 +1,29 @@
 using CouplesService.Application.Commands;
+using CouplesService.Application.Commands.Users;
+using CouplesService.Application.Common.Mappers;
 using CouplesService.Application.Contracts.Responses.Users;
 using CouplesService.Domain.Repositories;
+using FluentResults;
 using MediatR;
 
 namespace CouplesService.Application.Handlers.Users;
 
 public sealed class UpdateUserInfoHandler(IUsersRepository repository) 
-    : IRequestHandler<UpdateUserInfoCommand, UserInfoResponse>
+    : IRequestHandler<UpdateUserInfoCommand, Result<UserInfoResponse>>
 {
-    public async Task<UserInfoResponse> Handle(UpdateUserInfoCommand request, CancellationToken ctk)
+    public async Task<Result<UserInfoResponse>> Handle(UpdateUserInfoCommand request, CancellationToken ctk)
     {
         var user = await repository.FirstOrDefaultAsync(repository.QueryableSet, request.Id, ctk);
 
         if (user is null)
         {
-            throw new("User not found"); // TODO: API Exceptions with codes
+            return Result.Fail<UserInfoResponse>("User not found");
         }
         
         user.UpdateInfo(request.Name, request.Country, request.BirthDate);
 
         await repository.UnitOfWork.SaveChangesAsync(ctk);
 
-        return new()
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Country = user.Country,
-            BirthDate = user.BirthDate
-        };
+        return Result.Ok(user.ToUserInfoResponse());
     }
 }
