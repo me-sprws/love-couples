@@ -20,9 +20,14 @@
       dockerfile: ./src/CouplesService/CouplesService.WebAPI/Dockerfile
     environment:
       ConnectionStrings__Database: "Host=db;Port=5432;Database=CouplesDb;Username=postgres;Password=mysecretpassword;"
+      
+      ASPNETCORE_URLS: "https://+:8080;http://+:8010"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "mysecretpassword"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "./https/aspnetapp.pfx"
     depends_on:
       - db
     ports:
+      - "8010:8010"
       - "8080:8080"
 
 volumes:

@@ -5,7 +5,7 @@ using CouplesService.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddWebApi();
+builder.Services.AddWebApi(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
