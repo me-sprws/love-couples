@@ -20,7 +20,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseSerilogRequestLogging();
+app.UseSerilogRequestLogging(options =>
+{
+    options.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+    {
+        diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"]);
+        diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress);
+    };
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
