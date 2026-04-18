@@ -15,7 +15,7 @@ services:
     - "--mode=server"
     - "--frontend-port=57000"
     - "--backend-port=57200"
-    - "--roslyn-worker-port=57418"
+    - "--roslyn-worker-port=57421"
     - "--timeout=60"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
@@ -24,9 +24,9 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "couplesservice.webapi:dev"
     ports:
-    - "127.0.0.1:57018:57000"
-    - "127.0.0.1:57218:57200"
-    - "127.0.0.1:57418:57418"
+    - "127.0.0.1:57021:57000"
+    - "127.0.0.1:57221:57200"
+    - "127.0.0.1:57421:57421"
     volumes:
     - "C:\\Users\\ilyao\\OneDrive\\Desktop\\Development\\Backend\\love-couples\\src\\\
       CouplesService\\CouplesService.WebAPI:/app:rw"
@@ -37,5 +37,5 @@ services:
       Linux64:/opt/JetBrains/RiderDebuggerTools"
     - "C:\\Program Files\\JetBrains\\Rider2025.3\\bin\\backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     - "C:\\Users\\ilyao\\AppData\\Local\\JetBrains\\Rider2025.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2026_4_18_08_12_45:/var/opt/JetBrains/RiderDebuggerTools:rw"
+      JetBrains.Debugger.Worker.2026_4_18_08_36_16:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"

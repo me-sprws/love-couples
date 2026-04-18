@@ -1,4 +1,3 @@
-using CouplesService.Application.Commands;
 using CouplesService.Application.Commands.Users;
 using CouplesService.Application.Common.Mappers;
 using CouplesService.Application.Contracts.Responses.Users;

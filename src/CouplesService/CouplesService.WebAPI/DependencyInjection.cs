@@ -1,14 +1,19 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Serilog;
 
 namespace CouplesService.WebAPI;
 
 internal static class DependencyInjection
 {
-    public static IServiceCollection AddWebApi(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddWebApi(
+        this IServiceCollection services, IConfiguration configuration, WebApplicationBuilder builder)
     {
         services.AddOpenApi();
         services.AddControllers();
+        
+        builder.Host.UseSerilog((context, _, config) => 
+            config.ReadFrom.Configuration(context.Configuration));
         
         services.AddAuthorization();
         services
