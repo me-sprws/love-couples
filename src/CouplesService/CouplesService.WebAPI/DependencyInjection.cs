@@ -12,6 +12,16 @@ internal static class DependencyInjection
         services.AddOpenApi();
         services.AddControllers();
         
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new()
+            {
+                Title = "CouplesService API",
+                Version = "v1"
+            });
+        });
+        
         builder.Host.UseSerilog((context, _, config) => 
             config.ReadFrom.Configuration(context.Configuration));
         
