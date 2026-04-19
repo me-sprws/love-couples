@@ -1,15 +1,12 @@
 using System.Security.Claims;
 using CouplesService.Application.Contracts.Responses.Identity;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CouplesService.WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("Id")]
 public sealed class IdentityController : ControllerBase
 {
     [Authorize]
@@ -18,26 +15,16 @@ public sealed class IdentityController : ControllerBase
     {
         var name = User.Identity?.Name;
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
+        
+        var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value is string idString
+            ? Guid.Parse(idString)
+            : Guid.Empty;
 
         return Ok(new IdentityInfoResponse
         {
+            Id = id,
             Name = name,
             Email = email
         });
-    }
-    
-    [HttpGet("login")]
-    public ActionResult Login()
-    {
-        return Challenge(new AuthenticationProperties
-        {
-            RedirectUri = "/identity/me"
-        }, GoogleDefaults.AuthenticationScheme);
-    }
-    
-    [HttpGet("logout")]
-    public ActionResult Logout()
-    {
-        return SignOut();
     }
 }

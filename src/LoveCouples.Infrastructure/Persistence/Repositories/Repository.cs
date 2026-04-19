@@ -44,9 +44,19 @@ public abstract class Repository<TEntity, TContext>(TContext dbContext) : IRepos
         return query.FirstAsync(x => x.Id == id, ctk);
     }
 
+    public Task<TEntity> FirstAsync(IQueryable<TEntity> query, CancellationToken ctk = default)
+    {
+        return query.FirstAsync(ctk);
+    }
+
     public Task<TEntity?> FirstOrDefaultAsync(IQueryable<TEntity> query, Guid id, CancellationToken ctk = default)
     {
         return query.FirstOrDefaultAsync(x => x.Id == id, ctk);
+    }
+
+    public Task<TEntity?> FirstOrDefaultAsync(IQueryable<TEntity> query, CancellationToken ctk = default)
+    {
+        return query.FirstOrDefaultAsync(ctk);
     }
 
     public Task<List<TEntity>> ToListAsync(IQueryable<TEntity> query, CancellationToken ctk = default)

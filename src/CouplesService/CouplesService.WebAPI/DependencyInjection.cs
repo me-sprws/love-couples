@@ -1,5 +1,4 @@
-using System.Security.Claims;
-using CouplesService.Domain.Repositories;
+using CouplesService.WebAPI.Handlers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Serilog;
@@ -45,6 +44,8 @@ internal static class DependencyInjection
                 
                 options.Scope.Add("email");
                 options.Scope.Add("profile");
+
+                options.Events.OnCreatingTicket = AuthenticationHandler.OnCreatingTicket;
             });
         
         return services;
