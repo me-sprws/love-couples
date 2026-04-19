@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using CouplesService.Domain.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Serilog;

@@ -21,6 +21,11 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
             .HasMaxLength(200);
         
         builder
+            .Property(x => x.ExternalId)
+            .IsRequired()
+            .HasMaxLength(200);
+        
+        builder
             .HasDiscriminator<string>("AccountType")
             .HasValue<GoogleAccount>("Google")
             .HasValue<ServiceAccount>("Service");

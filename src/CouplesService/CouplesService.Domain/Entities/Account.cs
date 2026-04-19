@@ -5,6 +5,7 @@ namespace CouplesService.Domain.Entities;
 public abstract class Account : Entity
 {
     public string Username { get; set; }
+    public string ExternalId { get; set; }
     public User User { get; set; }
     public Guid UserId { get; set; }
 }
