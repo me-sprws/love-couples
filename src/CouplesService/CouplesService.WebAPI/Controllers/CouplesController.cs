@@ -1,3 +1,9 @@
+using System.Security.Claims;
+using CouplesService.Application.Commands.Couples;
+using CouplesService.Application.Contracts.Responses.Couples;
+using CouplesService.Domain.ValueObjects;
+using FluentResults.Extensions.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,12 +12,35 @@ namespace CouplesService.WebAPI.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public sealed class CouplesController : ControllerBase
+public sealed class CouplesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    public Task CreateCouple()
+    public async Task<ActionResult<CoupleResponse>> CreateCouple()
     {
-        return Task.CompletedTask;
+        if (User.FindFirstValue(ClaimTypes.NameIdentifier) is not {} userIdString)
+            return Unauthorized();
+        
+        var userId = Guid.Parse(userIdString);
+        
+        var command = new CreateCoupleCommand(
+            userId,
+            CouplesStatus.Alone,
+            DateTimeOffset.UtcNow
+        );
+
+        var response = await mediator.Send(command);
+
+        return response.ToActionResult();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<CoupleResponse>>> GetCouples()
+    {
+        var command = new GetCouplesCommand();
+        
+        var response = await mediator.Send(command);
+        
+        return response.ToActionResult();
     }
     
     [HttpPut("{coupleId:guid}")]
