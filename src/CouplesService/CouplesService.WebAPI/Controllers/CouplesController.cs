@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using CouplesService.Application.Commands.Couples;
 using CouplesService.Application.Commands.Invitations;
 using CouplesService.Application.Contracts.Responses.Couples;

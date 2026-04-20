@@ -1,8 +1,6 @@
-using CouplesService.Application.Commands.Couples;
 using CouplesService.Application.Commands.Invitations;
 using CouplesService.Application.Common.Mappers;
 using CouplesService.Application.Contracts.Responses.Invitations;
-using CouplesService.Domain.Entities;
 using CouplesService.Domain.Repositories;
 using CouplesService.Domain.Services;
 using FluentResults;
