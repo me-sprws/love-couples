@@ -7,7 +7,7 @@ public sealed class Couple : Entity
 {
     public CouplesStatus Status { get; set; }
     public DateTimeOffset? SeparatedAt { get; set; }
-    public DateTimeOffset TogetherSince { get; set; }
+    public DateTimeOffset? TogetherSince { get; set; }
     public Invitation? Invitation { get; set; }
     public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
 }

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using CouplesService.Application.Commands.Couples;
 using CouplesService.Application.Contracts.Responses.Couples;
 using CouplesService.Domain.ValueObjects;
+using CouplesService.WebAPI.Extensions;
 using FluentResults.Extensions.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,18 +18,15 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CoupleResponse>> CreateCouple()
     {
-        if (User.FindFirstValue(ClaimTypes.NameIdentifier) is not {} userIdString)
-            return Unauthorized();
+        var userId = User.GetValue<Guid>(ClaimTypes.NameIdentifier);
         
-        var userId = Guid.Parse(userIdString);
-        
-        var command = new CreateCoupleCommand(
-            userId,
-            CouplesStatus.Alone,
-            DateTimeOffset.UtcNow
+        var response = await mediator.Send(
+            new CreateCoupleCommand(
+                userId,
+                CouplesStatus.Alone,
+                null
+            )
         );
-
-        var response = await mediator.Send(command);
 
         return response.ToActionResult();
     }
@@ -36,9 +34,8 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<CoupleResponse>>> GetCouples()
     {
-        var command = new GetCouplesCommand();
-        
-        var response = await mediator.Send(command);
+        var response = await mediator.Send(
+            new GetCouplesCommand());
         
         return response.ToActionResult();
     }

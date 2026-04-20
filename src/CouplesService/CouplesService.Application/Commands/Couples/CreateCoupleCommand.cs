@@ -8,5 +8,5 @@ namespace CouplesService.Application.Commands.Couples;
 public sealed record CreateCoupleCommand(
     Guid UserId,
     CouplesStatus Status,
-    DateTimeOffset TogetherAt
+    DateTimeOffset? TogetherAt = null
 ) : IRequest<Result<CoupleResponse>>;
