@@ -43,6 +43,7 @@ internal static class AuthenticationHandler
         if (response.IsFailed)
         {
             context.Fail(response.Errors.FirstOrDefault()?.Message ?? "Unknown error occured.");
+            return;
         }
 
         context.Principal = new(CreateIdentity(response.Value, context.Principal?.Identity?.AuthenticationType));
