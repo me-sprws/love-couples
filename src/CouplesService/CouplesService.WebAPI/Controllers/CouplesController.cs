@@ -28,6 +28,19 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
 
         return response.ToActionResult();
     }
+    
+    [HttpDelete("{coupleId:guid}")]
+    public async Task<ActionResult<CoupleResponse>> LeaveCouple(Guid coupleId)
+    {
+        var response = await mediator.Send(
+            new LeaveCoupleCommand(
+                coupleId,
+                User.GetIdentifier()
+            )
+        );
+
+        return response.ToActionResult();
+    }
 
     [HttpGet]
     public async Task<ActionResult<List<CoupleResponse>>> GetCouples()
@@ -41,7 +54,7 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     [HttpPut("{coupleId:guid}")]
     public Task UpdateCoupleInfo(Guid coupleId)
     {
-        return Task.CompletedTask;
+        throw new NotImplementedException();
     }
     
     [HttpGet("{coupleId:guid}/invite")]

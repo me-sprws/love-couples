@@ -21,6 +21,11 @@ public sealed class CouplesRepository(ServiceDbContext dbContext)
         {
             query = query.Where(x => x.Memberships.Any(y => y.UserId == userId));
         }
+        
+        if (options.IncludeMembers)
+        {
+            query = query.Include(x => x.Memberships);
+        }
 
         if (options.AsNoTracking)
         {

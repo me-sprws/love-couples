@@ -6,6 +6,7 @@ namespace CouplesService.Domain.Repositories;
 public sealed record GetCouplesOptions(
     Guid? CoupleId = null,
     Guid? UserId = null,
+    bool IncludeMembers = false,
     bool AsNoTracking = false
 );
 
