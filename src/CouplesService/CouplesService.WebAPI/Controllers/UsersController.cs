@@ -1,6 +1,7 @@
 using CouplesService.Application.Commands.Users;
 using CouplesService.Application.Contracts.Requests.Users;
 using CouplesService.Application.Contracts.Responses.Users;
+using CouplesService.WebAPI.Extensions;
 using FluentResults.Extensions.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<UserInfoResponse>> UpdateUserInfo(UpdateUserInfoRequest request)
     {
         var command = new UpdateUserInfoCommand(
-            Guid.NewGuid(), 
+            User.GetIdentifier(), 
             request.Name, 
             request.BirthDate, 
             request.Country

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using CouplesService.Application.Contracts.Responses.Identity;
+using CouplesService.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +17,9 @@ public sealed class IdentityController : ControllerBase
         var name = User.Identity?.Name;
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
         
-        var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value is string idString
-            ? Guid.Parse(idString)
-            : Guid.Empty;
-
         return Ok(new IdentityInfoResponse
         {
-            Id = id,
+            Id = User.GetIdentifier(),
             Name = name,
             Email = email
         });
