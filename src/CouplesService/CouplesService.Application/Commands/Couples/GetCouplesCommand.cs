@@ -4,4 +4,4 @@ using MediatR;
 
 namespace CouplesService.Application.Commands.Couples;
 
-public sealed record GetCouplesCommand : IRequest<Result<List<CoupleResponse>>>;
+public sealed record GetCouplesCommand(Guid? UserId) : IRequest<Result<List<CoupleResponse>>>;

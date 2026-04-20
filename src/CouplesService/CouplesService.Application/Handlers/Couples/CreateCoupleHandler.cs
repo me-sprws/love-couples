@@ -5,7 +5,6 @@ using CouplesService.Domain.Entities;
 using CouplesService.Domain.Repositories;
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CouplesService.Application.Handlers.Couples;
 
@@ -17,14 +16,13 @@ public sealed class CreateCoupleHandler(
     public async Task<Result<CoupleResponse>> Handle(CreateCoupleCommand request, CancellationToken ctk)
     {
         var userExists = await usersRepository.AnyAsync(
-            usersRepository.QueryableSet
-                .Where(u => u.Id == request.UserId)
-                .AsNoTracking(), 
-            ctk);
+            usersRepository.Get(new(
+                UserId: request.UserId, 
+                AsNoTracking: true)), ctk);
 
         if (!userExists)
         {
-            return Result.Fail("User not exists");
+            return Result.Fail("User not exists.");
         }
         
         var couple = new Couple

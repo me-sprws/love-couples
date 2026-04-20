@@ -5,6 +5,11 @@ namespace CouplesService.WebAPI.Extensions;
 
 internal static class UserIdentificationExtensions
 {
+    public static Guid GetIdentifier(this ClaimsPrincipal user)
+    {
+        return user.GetValue<Guid>(ClaimTypes.NameIdentifier);
+    }
+    
     public static TValue GetValue<TValue>(this ClaimsPrincipal user, string claimType)
         where TValue : IParsable<TValue>
     {

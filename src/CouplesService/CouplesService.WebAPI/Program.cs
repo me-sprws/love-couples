@@ -1,5 +1,6 @@
 using CouplesService.Application;
 using CouplesService.Infrastructure;
+using CouplesService.Infrastructure.Configuration;
 using CouplesService.Infrastructure.Persistence.Extensions;
 using CouplesService.WebAPI;
 using Serilog;
@@ -8,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddWebApi(builder.Configuration, builder);
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(
+    builder.Configuration,
+    builder.Configuration.GetSection(nameof(CodeGeneration)).Get<CodeGeneration>()!);
 
 var app = builder.Build();
 

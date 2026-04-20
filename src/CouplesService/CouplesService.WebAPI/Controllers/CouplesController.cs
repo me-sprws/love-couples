@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using CouplesService.Application.Commands.Couples;
+using CouplesService.Application.Commands.Invitations;
 using CouplesService.Application.Contracts.Responses.Couples;
+using CouplesService.Application.Contracts.Responses.Invitations;
 using CouplesService.Domain.ValueObjects;
 using CouplesService.WebAPI.Extensions;
 using FluentResults.Extensions.AspNetCore;
@@ -18,13 +20,10 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CoupleResponse>> CreateCouple()
     {
-        var userId = User.GetValue<Guid>(ClaimTypes.NameIdentifier);
-        
         var response = await mediator.Send(
             new CreateCoupleCommand(
-                userId,
-                CouplesStatus.Alone,
-                null
+                User.GetIdentifier(),
+                CouplesStatus.Alone
             )
         );
 
@@ -35,7 +34,7 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<List<CoupleResponse>>> GetCouples()
     {
         var response = await mediator.Send(
-            new GetCouplesCommand());
+            new GetCouplesCommand(User.GetIdentifier()));
         
         return response.ToActionResult();
     }
@@ -47,14 +46,22 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     }
     
     [HttpGet("{coupleId:guid}/invite")]
-    public Task GetCoupleInvitation(Guid coupleId)
+    public async Task<ActionResult<InvitationResponse>> GetCoupleInvitation(Guid coupleId)
     {
-        return Task.CompletedTask;
+        var command = new GetInvitationCommand(coupleId, User.GetIdentifier());
+        
+        var response = await mediator.Send(command);
+        
+        return response.ToActionResult();
     }
     
-    [HttpPost("{coupleId:guid}/invite/{code}")]
-    public Task AcceptCoupleInvitation(Guid coupleId, string code)
+    [HttpPost("invite/{code}")]
+    public async Task<ActionResult> AcceptCoupleInvitation(string code)
     {
-        return Task.CompletedTask;
+        var command = new AcceptInvitationCommand(code, User.GetIdentifier());
+
+        var response = await mediator.Send(command);
+        
+        return response.ToActionResult();
     }
 }

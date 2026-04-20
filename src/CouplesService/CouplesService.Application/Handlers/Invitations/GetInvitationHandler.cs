@@ -1,0 +1,51 @@
+using CouplesService.Application.Commands.Couples;
+using CouplesService.Application.Commands.Invitations;
+using CouplesService.Application.Common.Mappers;
+using CouplesService.Application.Contracts.Responses.Invitations;
+using CouplesService.Domain.Entities;
+using CouplesService.Domain.Repositories;
+using CouplesService.Domain.Services;
+using FluentResults;
+using MediatR;
+
+namespace CouplesService.Application.Handlers.Invitations;
+
+public sealed class GetInvitationHandler(
+    IInvitationsRepository invitationRepository,
+    ICouplesRepository couplesRepository,
+    ICodeGenerator codeGenerator
+) : IRequestHandler<GetInvitationCommand, Result<InvitationResponse>>
+{
+    public async Task<Result<InvitationResponse>> Handle(GetInvitationCommand request, CancellationToken ctk)
+    {
+        var invitation = await invitationRepository.FirstOrDefaultAsync(
+            invitationRepository.Get(new(
+                CoupleId: request.CoupleId,
+                AsNoTracking: true)), 
+            ctk);
+
+        if (invitation is not null)
+        {
+            return invitation.ToInvitationResponse();
+        }
+
+        var couple = await couplesRepository.FirstOrDefaultAsync(
+            couplesRepository.Get(new(CoupleId: request.CoupleId)), 
+            ctk);
+
+        if (couple is null)
+        {
+            return Result.Fail<InvitationResponse>("Couple not found.");
+        }
+
+        couple.Invitation = new()
+        {
+            Code = codeGenerator.GenerateCode(),
+            SenderId = request.SenderId
+        };
+
+        await couplesRepository.UnitOfWork.SaveChangesAsync(ctk);
+        
+        return Result.Ok(couple.Invitation.ToInvitationResponse());
+    }
+}
