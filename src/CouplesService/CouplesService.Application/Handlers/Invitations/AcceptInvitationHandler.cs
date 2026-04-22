@@ -10,7 +10,7 @@ namespace CouplesService.Application.Handlers.Invitations;
 
 public sealed class AcceptInvitationHandler(
     IInvitationsRepository invitationsRepository,
-    IDateTimeProvider dateTimeProvider
+    IDateTimeProvider time
 ) : IRequestHandler<AcceptInvitationCommand, Result>
 {
     public async Task<Result> Handle(AcceptInvitationCommand request, CancellationToken ctk)
@@ -23,26 +23,13 @@ public sealed class AcceptInvitationHandler(
             ctk);
 
         if (invitation is null)
-        {
             return Result.Fail("Invalid invitation code.");
-        }
 
-        if (invitation.Couple.Memberships.Any(x => x.UserId == request.InviteeUserId))
-        {
-            return Result.Fail("Invitee user already in couple.");
-        }
+        var acceptInvitation = invitation.Couple.AcceptInvitation(request.InviteeUserId, time);
 
-        var enterRelationship = invitation.Couple.EnterRelationship(new()
-        {
-            UserId = request.InviteeUserId
-        }, dateTimeProvider);
-
-        if (enterRelationship.IsFailed)
-            return enterRelationship;
+        if (acceptInvitation.IsSuccess)
+            await invitationsRepository.UnitOfWork.SaveChangesAsync(ctk);
         
-        await invitationsRepository.DeleteAsync(invitation, ctk);
-        await invitationsRepository.UnitOfWork.SaveChangesAsync(ctk);
-        
-        return Result.Ok();
+        return acceptInvitation;
     }
 }

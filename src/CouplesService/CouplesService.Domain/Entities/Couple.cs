@@ -18,7 +18,7 @@ public sealed class Couple : Entity
     
     public CouplesStatus Status { get; private set; }
     public DateTimeOffset? SeparatedAt { get; private set; }
-    public DateTimeOffset? TogetherSince { get; private set; }
+    public DateTimeOffset? TogetherSince { get; set; }
     public Invitation? Invitation { get; private set; }
     public IReadOnlyCollection<Membership> Memberships => _memberships;
 
@@ -39,20 +39,33 @@ public sealed class Couple : Entity
         return couple;
     }
 
-    public Result<Invitation> CreateInvitation(User sender, ICodeGenerator codeGenerator)
+    public Result<Invitation> CreateInvitation(Guid senderId, ICodeGenerator codeGenerator)
     {
         if (Invitation is not null)
             return Result.Fail("Invitation already exists.");
         
-        var invitation = 
-            new Invitation
+        Invitation = 
+            new()
             {
                 Couple = this,
-                Sender = sender,
+                SenderId = senderId,
                 Code = codeGenerator.GenerateCode()
             };
         
-        return Result.Ok(invitation);
+        return Result.Ok(Invitation);
+    }
+
+    public Result AcceptInvitation(Guid inviteeUserId, IDateTimeProvider time)
+    {
+        if (Memberships.Any(x => x.UserId == inviteeUserId))
+            return Result.Fail("Invitee user already in couple.");
+
+        var result = EnterRelationship(new() { UserId = inviteeUserId }, time);
+
+        if (result.IsSuccess)
+            Invitation = null;
+        
+        return result;
     }
 
     public Result EnterRelationship(Membership membership, IDateTimeProvider clock)
@@ -77,7 +90,7 @@ public sealed class Couple : Entity
         return Separate(membership, dateTimeProvider);
     }
 
-    Result Separate(Membership membership, IDateTimeProvider dateTimeProvider)
+    public Result Separate(Membership membership, IDateTimeProvider dateTimeProvider)
     {
         if (membership is null)
             return Result.Fail("Membership is required.");

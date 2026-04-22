@@ -33,15 +33,10 @@ public sealed class GetInvitationHandler(
         if (couple is null)
             return Result.Fail<InvitationResponse>("Couple not found.");
 
-        var sender = await usersRepository.FirstOrDefaultAsync(
-            usersRepository.QueryableSet, 
-            request.SenderId, 
-            ctk);
-
-        if (sender is null)
+        if (!await usersRepository.ExistsAsync(request.SenderId, ctk))
             return Result.Fail<InvitationResponse>("Sender not found.");
         
-        var invitationResult = couple.CreateInvitation(sender, codeGenerator);
+        var invitationResult = couple.CreateInvitation(request.SenderId, codeGenerator);
 
         if (invitationResult.IsSuccess)
             await couplesRepository.UnitOfWork.SaveChangesAsync(ctk);
