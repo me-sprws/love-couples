@@ -20,10 +20,7 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<CoupleResponse>> CreateCouple()
     {
         var response = await mediator.Send(
-            new CreateCoupleCommand(
-                User.GetIdentifier(),
-                CouplesStatus.Alone
-            )
+            new CreateCoupleCommand(User.GetIdentifier())
         );
 
         return response.ToActionResult();

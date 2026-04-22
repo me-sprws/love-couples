@@ -64,6 +64,11 @@ public abstract class Repository<TEntity, TContext>(TContext dbContext) : IRepos
         return query.ToListAsync(ctk);
     }
 
+    public Task<bool> ExistsAsync(Guid id, CancellationToken ctk = default)
+    {
+        return QueryableSet.AsNoTracking().AnyAsync(x => x.Id == id, ctk);
+    }
+
     public Task<List<T>> SelectToListAsync<T>(IQueryable<TEntity> query, Expression<Func<TEntity, T>> select,
         CancellationToken ctk = default)
     {

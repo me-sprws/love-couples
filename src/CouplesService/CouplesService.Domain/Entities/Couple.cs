@@ -3,47 +3,116 @@ using CouplesService.Domain.ValueObjects;
 using FluentResults;
 using LoveCouples.Domain.Contracts;
 using LoveCouples.Domain.Services;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+// ReSharper disable CollectionNeverUpdated.Local
 
 namespace CouplesService.Domain.Entities;
 
 public sealed class Couple : Entity
 {
-    public CouplesStatus Status { get; set; }
-    public DateTimeOffset? SeparatedAt { get; set; }
-    public DateTimeOffset? TogetherSince { get; set; }
-    public Invitation? Invitation { get; set; }
-    public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
+    public const int MaxMembers = 2;
 
-    public Result EnterRelationship(Membership membership, IDateTimeProvider dateTimeProvider)
+    readonly List<Membership> _memberships = [];
+
+    Couple() { }
+    
+    public CouplesStatus Status { get; private set; }
+    public DateTimeOffset? SeparatedAt { get; private set; }
+    public DateTimeOffset? TogetherSince { get; private set; }
+    public Invitation? Invitation { get; private set; }
+    public IReadOnlyCollection<Membership> Memberships => _memberships;
+
+    public static Couple CreateEmpty()
     {
-        if (Memberships.Count >= 2)
-        {
-            return Result.Fail("You cannot have more than two relationships.");
-        }
-        
-        Memberships.Add(membership);
+        return new();
+    }
 
-        Status = CouplesStatus.Dating;
-        TogetherSince ??= dateTimeProvider.Now;
+    public static Couple Create(Guid userId, IDateTimeProvider time)
+    {
+        var couple = new Couple();
+        
+        couple.EnterRelationship(new()
+        {
+            UserId = userId,
+        }, time);
+
+        return couple;
+    }
+
+    public Result<Invitation> CreateInvitation(User sender, ICodeGenerator codeGenerator)
+    {
+        if (Invitation is not null)
+            return Result.Fail("Invitation already exists.");
+        
+        var invitation = 
+            new Invitation
+            {
+                Couple = this,
+                Sender = sender,
+                Code = codeGenerator.GenerateCode()
+            };
+        
+        return Result.Ok(invitation);
+    }
+
+    public Result EnterRelationship(Membership membership, IDateTimeProvider clock)
+    {
+        if (membership is null)
+            return Result.Fail("Membership is required.");
+
+        if (IsFull())
+            return Result.Fail($"Couple cannot have more than {MaxMembers} members.");
+
+        _memberships.Add(membership);
+        UpdateOnEnter(clock);
 
         return Result.Ok();
     }
     
     public Result Separate(Func<Membership, bool> predicate, IDateTimeProvider dateTimeProvider)
     {
-        return Separate(Memberships.Where(predicate).FirstOrDefault(), dateTimeProvider);
+        if (Memberships.Where(predicate).FirstOrDefault() is not { } membership)
+            return Result.Fail("Membership is required.");
+        
+        return Separate(membership, dateTimeProvider);
     }
 
-    public Result Separate(Membership? initiator, IDateTimeProvider dateTimeProvider)
+    Result Separate(Membership membership, IDateTimeProvider dateTimeProvider)
     {
-        if (initiator is null || !Memberships.Remove(initiator))
-        {
-            return Result.Fail("Initiator does not in this couple.");
-        }
+        if (membership is null)
+            return Result.Fail("Membership is required.");
+        
+        if (!_memberships.Remove(membership))
+            return Result.Fail("Membership not part of the couple.");
 
-        Status = CouplesStatus.Separated;
-        SeparatedAt = dateTimeProvider.Now;
+        UpdateOnSeparation(dateTimeProvider);
 
         return Result.Ok();
+    }
+    
+    bool IsFull() => Memberships.Count >= MaxMembers;
+    bool IsAlone() => Memberships.Count == 1;
+
+    void UpdateOnEnter(IDateTimeProvider dateTimeProvider)
+    {
+        if (IsAlone())
+        {
+            Status = CouplesStatus.Alone;
+            return;
+        }
+
+        if (IsFull())
+        {
+            Status = CouplesStatus.Dating;
+            TogetherSince ??= dateTimeProvider.Now;
+        }
+    }
+    
+    void UpdateOnSeparation(IDateTimeProvider time)
+    {
+        if (Memberships.Count >= MaxMembers) return;
+        
+        Status = CouplesStatus.Separated;
+        SeparatedAt = time.Now;
     }
 }
