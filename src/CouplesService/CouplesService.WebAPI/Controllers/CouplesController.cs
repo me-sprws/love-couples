@@ -57,7 +57,7 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
         throw new NotImplementedException();
     }
     
-    [HttpGet("{coupleId:guid}/invite")]
+    [HttpGet("{coupleId:guid}/Invite")]
     public async Task<ActionResult<InvitationResponse>> GetCoupleInvitation(Guid coupleId)
     {
         var command = new GetInvitationCommand(coupleId, User.GetIdentifier());
@@ -67,7 +67,7 @@ public sealed class CouplesController(IMediator mediator) : ControllerBase
         return response.ToActionResult();
     }
     
-    [HttpPost("invite/{code}")]
+    [HttpPost("Invite/{code}")]
     public async Task<ActionResult> AcceptCoupleInvitation(string code)
     {
         var command = new AcceptInvitationCommand(code, User.GetIdentifier());

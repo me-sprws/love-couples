@@ -1,4 +1,5 @@
 using CouplesService.Domain.Entities;
+using LoveCouples.Domain.Services;
 using LoveCouples.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,8 @@ namespace CouplesService.Infrastructure.Persistence;
 
 public sealed class ServiceDbContext : CoreDbContext
 {
-    public ServiceDbContext(DbContextOptions options) : base(options)
+    public ServiceDbContext(DbContextOptions options, IDateTimeProvider dateTimeProvider) 
+        : base(options, dateTimeProvider)
     {
     }
 

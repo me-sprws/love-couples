@@ -4,6 +4,9 @@ using CouplesService.Infrastructure.Configuration;
 using CouplesService.Infrastructure.Persistence;
 using CouplesService.Infrastructure.Persistence.Repositories;
 using CouplesService.Infrastructure.Services;
+using LoveCouples.Domain.Services;
+using LoveCouples.Infrastructure;
+using LoveCouples.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +20,10 @@ public static class DependencyInjection
         IConfiguration configuration,
         CodeGeneration codeGeneration)
     {
+        services.AddCoreInfrastructure();
+        
         services.AddSingleton<ICodeGenerator>(_ => new CodeGenerator(codeGeneration));
+        services.AddSingleton<IDateTimeProvider, UtcDateTimeProvider>();
         
         services.AddDbContext<ServiceDbContext>(opt => 
             opt.UseNpgsql(configuration.GetConnectionString("Database")));

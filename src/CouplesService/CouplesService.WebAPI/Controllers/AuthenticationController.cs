@@ -8,10 +8,10 @@ namespace CouplesService.WebAPI.Controllers;
 [Route("Auth")]
 public sealed class AuthenticationController : ControllerBase
 {
-    [HttpGet("google")]
+    [HttpGet("Google")]
     public ActionResult LoginGoogle()
     {
-        const string myIdPath = "/id/me";
+        const string myIdPath = "/Id/Me";
         
         if (User.Identities.Any(identity =>
                 identity is
@@ -27,7 +27,7 @@ public sealed class AuthenticationController : ControllerBase
         }, GoogleDefaults.AuthenticationScheme);
     }
     
-    [HttpGet("logout")]
+    [HttpGet("Logout")]
     public ActionResult Logout()
     {
         return SignOut();

@@ -16,7 +16,7 @@ public sealed class UpdateUserInfoHandler(IUsersRepository repository)
 
         if (user is null)
         {
-            return Result.Fail<UserInfoResponse>("User not found");
+            return Result.Fail<UserInfoResponse>("User not found.");
         }
         
         user.UpdateInfo(request.Name, request.Country, request.BirthDate);

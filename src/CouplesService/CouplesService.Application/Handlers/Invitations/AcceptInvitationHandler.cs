@@ -1,13 +1,16 @@
 using CouplesService.Application.Commands.Invitations;
 using CouplesService.Domain.Repositories;
+using CouplesService.Domain.Services;
 using CouplesService.Domain.ValueObjects;
 using FluentResults;
+using LoveCouples.Domain.Services;
 using MediatR;
 
 namespace CouplesService.Application.Handlers.Invitations;
 
 public sealed class AcceptInvitationHandler(
-    IInvitationsRepository invitationsRepository
+    IInvitationsRepository invitationsRepository,
+    IDateTimeProvider dateTimeProvider
 ) : IRequestHandler<AcceptInvitationCommand, Result>
 {
     public async Task<Result> Handle(AcceptInvitationCommand request, CancellationToken ctk)
@@ -29,16 +32,15 @@ public sealed class AcceptInvitationHandler(
             return Result.Fail("Invitee user already in couple.");
         }
 
-        invitation.Couple.Memberships.Add(new()
+        var enterRelationship = invitation.Couple.EnterRelationship(new()
         {
             UserId = request.InviteeUserId
-        });
+        }, dateTimeProvider);
 
-        invitation.Couple.Status = CouplesStatus.Dating;
-        invitation.Couple.TogetherSince ??= DateTimeOffset.UtcNow;
+        if (enterRelationship.IsFailed)
+            return enterRelationship;
         
         await invitationsRepository.DeleteAsync(invitation, ctk);
-
         await invitationsRepository.UnitOfWork.SaveChangesAsync(ctk);
         
         return Result.Ok();

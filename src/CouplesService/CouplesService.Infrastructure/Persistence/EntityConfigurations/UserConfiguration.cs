@@ -12,6 +12,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.Name).HasMaxLength(35).IsRequired();
         builder.Property(x => x.Country).HasMaxLength(15);
+        builder.Property(x => x.BirthDate);
         builder.Property(x => x.CreatedAt);
         builder.Property(x => x.UpdatedAt);
         

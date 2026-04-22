@@ -42,7 +42,7 @@ public sealed class CreateAccountHandler(IMediator mediator, IAccountsRepository
 
         if (userResult.IsFailed)
         {
-            return userResult.ToResult();
+            return Result.Fail(userResult.Errors);
         }
         
         google = new GoogleAccount
